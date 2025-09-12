@@ -19,10 +19,37 @@
   .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
 
   .card h3 { margin:10px 0; color:#fff; }
+
+  /* Dashboard Values */
+  #planName {
+    color: #00ff99;
+    font-weight: bold;
+    font-size: 1.5em;
+    text-shadow: 1px 1px 5px rgba(0,255,150,0.7);
+    margin-top: 10px;
+    transition: transform 0.3s;
+  }
+
+  #miningRate {
+    color: #00d1ff;
+    font-weight: bold;
+    font-size: 1.3em;
+    text-shadow: 1px 1px 5px rgba(0,209,255,0.6);
+    margin-top: 10px;
+    transition: transform 0.3s;
+  }
+
+  .balance {
+    font-size:22px; color:#00ff99; margin-top:10px; font-weight:bold;
+    transition: transform 0.3s;
+  }
+
+  /* Animate number change */
+  .animate-update { transform: scale(1.2); }
+
   .status { font-size:16px; margin:10px 0; }
   .pending { color:#ffc107; font-weight:bold; }
   .confirmed { color:#28a745; font-weight:bold; }
-  .balance { font-size:22px; color:#00ff99; margin-top:10px; font-weight:bold; }
 
   .logout-btn, .buy-btn { display:inline-block; margin-top:15px; padding:10px 18px; color:white; border:none; border-radius:6px; cursor:pointer; text-decoration:none; transition:0.3s; }
   .logout-btn { background: #dc3545; }
@@ -39,9 +66,9 @@
   .stat-box { background: rgba(255,255,255,0.05); padding:20px; margin:10px; border-radius:12px; flex:1 1 250px; text-align:center; color:#fff; transition: transform 0.3s, box-shadow 0.3s;}
   .stat-box:hover { transform: translateY(-5px); box-shadow:0 10px 20px rgba(0,255,150,0.3);}
   .stat-box h4 { margin:5px 0; font-size:1em; }
-  .stat-number.btc { color:#28a745; font-weight:bold; font-size:1.2em; }
-  .stat-number.usd { color:#00d1ff; font-weight:bold; font-size:1.2em; }
-  .stat-number.referrals { color:#ffc107; font-weight:bold; font-size:1.2em; }
+  .stat-number.btc { color:#28a745; font-weight:bold; font-size:1.2em; transition: transform 0.3s; }
+  .stat-number.usd { color:#00d1ff; font-weight:bold; font-size:1.2em; transition: transform 0.3s; }
+  .stat-number.referrals { color:#ffc107; font-weight:bold; font-size:1.2em; transition: transform 0.3s; }
 
   /* Mobile Responsive */
   @media (max-width:768px){
@@ -151,7 +178,6 @@ window.addEventListener('resize', () => {
 
 const particles = [];
 const particleCount = 120;
-
 for(let i=0;i<particleCount;i++){
   particles.push({
     x: Math.random()*canvas.width,
@@ -161,7 +187,6 @@ for(let i=0;i<particleCount;i++){
     dy: (Math.random()-0.5)*0.5
   });
 }
-
 function animateParticles(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   for(let p of particles){
@@ -171,7 +196,6 @@ function animateParticles(){
     ctx.fill();
     p.x += p.dx;
     p.y += p.dy;
-
     if(p.x < 0 || p.x > canvas.width) p.dx*=-1;
     if(p.y < 0 || p.y > canvas.height) p.dy*=-1;
   }
@@ -202,12 +226,15 @@ let lastMiningTime = parseInt(localStorage.getItem(currentUser+"_lastMine"))||Da
 const notificationModal = document.getElementById("notificationModal");
 const notificationMessage = document.getElementById("notificationMessage");
 const closeNotificationBtn = document.getElementById("closeNotificationBtn");
-function showNotification(type,message){
-  notificationMessage.innerText = message;
-  notificationModal.style.display="block";
-}
 closeNotificationBtn.onclick = ()=>{ notificationModal.style.display="none"; }
 window.onclick = e=>{ if(e.target==notificationModal) notificationModal.style.display="none"; }
+
+/* Animate Value Change */
+function animateValue(element,newValue){
+  element.classList.add('animate-update');
+  element.innerText = newValue;
+  setTimeout(()=>{ element.classList.remove('animate-update'); },300);
+}
 
 function updateProgressBar(){
   const plan=userData.plan;
@@ -229,18 +256,20 @@ function startMining(){
       paymentStatus.innerHTML="✅ Mining Started!";
       paymentStatus.classList.remove("pending");
       paymentStatus.classList.add("confirmed");
-      showNotification("success","Mining has started!");
+      notificationMessage.innerText="Mining has started!";
+      notificationModal.style.display="block";
     },5000);
   }
 }
 
 function updateDashboard(){
   const plan=userData.plan;
-  planName.innerText=plan||"No Plan Bought";
-  buyPlanBtn.style.display=plan?"none":"inline-block";
-  miningRate.innerText=plan?planRates[plan]+" BTC/day":"0 BTC/day";
-  if(plan&&!userData.paymentConfirmed) startMining();
-  else if(plan&&userData.paymentConfirmed){
+  animateValue(planName, plan||"No Plan Bought");
+  buyPlanBtn.style.display = plan ? "none" : "inline-block";
+  animateValue(miningRate, plan ? planRates[plan]+" BTC/day" : "0 BTC/day");
+
+  if(plan && !userData.paymentConfirmed) startMining();
+  else if(plan && userData.paymentConfirmed){
     paymentStatus.innerHTML="✅ Mining Started!";
     paymentStatus.classList.remove("pending");
     paymentStatus.classList.add("confirmed");
@@ -249,10 +278,12 @@ function updateDashboard(){
     paymentStatus.classList.remove("confirmed");
     paymentStatus.classList.add("pending");
   }
-  miningBalance.innerText=parseFloat(userData.balance).toFixed(6)+" BTC";
-  totalMinedEl.innerText=parseFloat(userData.totalMined).toFixed(6)+" BTC";
-  estimatedEarningsEl.innerText="$"+(parseFloat(userData.totalMined)*btcPriceUSD).toFixed(2);
-  referralsEl.innerText=userData.referrals+" Referrals";
+
+  animateValue(miningBalance, parseFloat(userData.balance).toFixed(6)+" BTC");
+  animateValue(totalMinedEl, parseFloat(userData.totalMined).toFixed(6)+" BTC");
+  animateValue(estimatedEarningsEl, "$"+(parseFloat(userData.totalMined)*btcPriceUSD).toFixed(2));
+  animateValue(referralsEl, userData.referrals+" Referrals");
+  
   updateProgressBar();
 }
 
@@ -262,7 +293,7 @@ function goToPlans(){ window.location.href="plans.html"; }
 updateDashboard();
 
 setInterval(()=>{
-  if(userData.plan&&userData.paymentConfirmed){
+  if(userData.plan && userData.paymentConfirmed){
     const now=Date.now();
     const secondsPassed=(now-lastMiningTime)/1000;
     const increment=planRates[userData.plan]/86400*secondsPassed;
@@ -271,11 +302,12 @@ setInterval(()=>{
     users[currentUser]=userData;
     localStorage.setItem("users",JSON.stringify(users));
     localStorage.setItem(currentUser+"_lastMine",now);
-    miningBalance.innerText=userData.balance.toFixed(6)+" BTC";
-    totalMinedEl.innerText=userData.totalMined.toFixed(6)+" BTC";
-    estimatedEarningsEl.innerText="$"+(userData.totalMined*btcPriceUSD).toFixed(2);
+
+    animateValue(miningBalance, userData.balance.toFixed(6)+" BTC");
+    animateValue(totalMinedEl, userData.totalMined.toFixed(6)+" BTC");
+    animateValue(estimatedEarningsEl, "$"+(userData.totalMined*btcPriceUSD).toFixed(2));
     updateProgressBar();
-    lastMiningTime=now;
+    lastMiningTime = now;
   }
 },1000);
 </script>

@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BTC Mining Pro | Home</title>
-<link rel="stylesheet" href="style.css">
 <style>
   /* General */
   body {
@@ -16,22 +15,35 @@
   }
 
   /* Navbar */
-  nav {
+  .nav-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     background: #1a1a2e;
-    padding: 15px;
+    padding: 15px 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
   }
-  nav a {
+  .nav-logo {
+    color: #ffcb05;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  .nav-links a {
     color: #fff;
     text-decoration: none;
-    margin: 0 20px;
     font-weight: bold;
     transition: color 0.3s;
   }
-  nav a:hover {
-    color: #ffc107;
+  .nav-links a:hover { color: #ffc107; }
+  .nav-toggle {
+    display: none;
+    font-size: 1.5em;
+    color: #ffcb05;
+    cursor: pointer;
   }
 
   /* Hero Section */
@@ -186,8 +198,18 @@
     .hero p { font-size: 1em; }
     .features, .plan-cards, .stats { flex-direction: column; align-items: center; }
     .feature, .plan { width: 90%; margin-bottom: 20px; }
-    nav a { display: block; margin: 10px 0; }
     .testimonial-carousel { max-width: 100%; }
+
+    /* Mobile Navbar */
+    .nav-toggle { display: block; }
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 10px;
+      background: #1a1a2e;
+    }
+    .nav-links a { margin: 10px 0; text-align: center; }
   }
 </style>
 </head>
@@ -195,11 +217,17 @@
 
 <!-- Navbar -->
 <nav>
-  <a href="index.html">Home</a>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="plans.html">Plans</a>
-  <a href="withdraw.html">Withdraw</a>
-  <a href="contact.html">Contact</a>
+  <div class="nav-container">
+    <div class="nav-logo">BTC Mining Pro</div>
+    <div class="nav-toggle" id="navToggle">&#9776;</div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="plans.html">Plans</a>
+      <a href="withdraw.html">Withdraw</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
 </nav>
 
 <!-- Hero Section -->
@@ -269,14 +297,6 @@
         <img src="https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg" alt="Michael B.">
         <p>⭐⭐⭐⭐⭐<br>“Fast payouts and excellent service.” – Michael B.</p>
       </div>
-      <div class="testimonial">
-        <img src="https://img.freepik.com/premium-vector/avatar-profile-icon-flat-style-female-user-profile-vector-illustration-isolated-background-women-profile-sign-business-concept_157943-38866.jpg" alt="Emily R.">
-        <p>⭐⭐⭐⭐<br>“User-friendly platform for both beginners and pros.” – Emily R.</p>
-      </div>
-      <div class="testimonial">
-        <img src="https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg" alt="David W.">
-        <p>⭐⭐⭐⭐⭐<br>“Highly recommended for anyone looking to mine BTC safely.” – David W.</p>
-      </div>
     </div>
     <button class="carousel-btn right" onclick="nextTestimonial()">&#10095;</button>
   </div>
@@ -309,13 +329,18 @@
   </p>
 </footer>
 
-<!-- JS -->
 <script>
-  // Hero buttons
+  // Mobile Navbar Toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    navLinks.style.display = (navLinks.style.display === "flex") ? "none" : "flex";
+  });
+
+  // Hero buttons logic
   function updateHeroButtons() {
     const loggedIn = localStorage.getItem("loggedIn") === "true";
     const currentUser = localStorage.getItem("currentUser");
-
     const btnGetStarted = document.getElementById("btnGetStarted");
     const btnRegister = document.getElementById("btnRegister");
     const btnLogin = document.getElementById("btnLogin");
@@ -330,14 +355,13 @@
       btnGetStarted.onclick = () => { window.location.href="plans.html"; };
       btnRegister.style.display = "inline-block";
       btnLogin.style.display = "inline-block";
-
       btnRegister.onclick = () => { window.location.href="register.html"; };
       btnLogin.onclick = () => { window.location.href="login.html"; };
     }
   }
   updateHeroButtons();
 
-  // Testimonial Carousel with Autoplay
+  // Testimonial carousel
   const track = document.querySelector('.testimonial-track');
   const testimonials = document.querySelectorAll('.testimonial');
   let currentIndex = 0;
@@ -345,19 +369,15 @@
   function showTestimonial(index) {
     track.style.transform = `translateX(-${index * 100}%)`;
   }
-
   function nextTestimonial() {
     currentIndex = (currentIndex + 1) % testimonials.length;
     showTestimonial(currentIndex);
   }
-
   function prevTestimonial() {
     currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
     showTestimonial(currentIndex);
   }
-
   showTestimonial(currentIndex);
-  // Autoplay every 5 seconds
   setInterval(nextTestimonial, 5000);
 </script>
 
