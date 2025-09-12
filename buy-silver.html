@@ -1,104 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Silver Plan Payment - BTC Mining Pro</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 500px;
-      background: #fff;
-      margin: 50px auto;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
-    .btc-address {
-      background: #f8f9fa;
-      border: 1px dashed #ccc;
-      padding: 15px;
-      border-radius: 8px;
-      margin: 20px 0;
-      font-weight: bold;
-      word-break: break-all;
-    }
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    .copy-btn { background: #007bff; color: #fff; }
-    .copy-btn:hover { background: #0056b3; }
-    .confirm-btn { background: #28a745; color: #fff; }
-    .confirm-btn:hover { background: #218838; }
-    a { color: #28a745; text-decoration: none; font-weight: bold; }
-    .note { margin-top: 20px; color: #dc3545; font-weight: bold; }
-    @media (max-width: 768px) {
-      .container { width: 90%; margin: 20px auto; padding: 20px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silver Plan Payment - BTC Mining Pro</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; margin: 0; padding: 0; }
+.container { max-width: 500px; background: #fff; margin: 50px auto; padding: 30px; border-radius: 10px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); position: relative; }
+.btc-address { background: #f8f9fa; border: 1px dashed #ccc; padding: 15px; border-radius: 8px; margin: 20px 0; font-weight: bold; word-break: break-all; }
+button, a, input { padding: 12px 20px; border-radius: 6px; font-size: 16px; margin-top: 10px; display: block; width: 80%; margin-left: auto; margin-right: auto; }
+button { cursor: pointer; border: none; transition: 0.3s; }
+.copy-btn { background: #007bff; color: #fff; }
+.copy-btn:hover { background: #0056b3; }
+.send-agent { background: #17a2b8; color: #fff; cursor: not-allowed; font-size: 14px; padding: 6px 12px; display: inline-block; margin-top:5px; }
+.send-agent.active { cursor: pointer; pointer-events: auto; }
+.upload-btn { background: #6c757d; color: #fff; cursor: not-allowed; }
+.upload-btn.active { cursor: pointer; background: #17a2b8; }
+.confirm-btn { background: #28a745; color: #fff; border: none; cursor: not-allowed; }
+.confirm-btn.active { cursor: pointer; }
+.status { margin-top: 15px; font-weight: bold; }
+.status span { display: block; margin: 5px 0; }
+.pending { color: #888; }
+.done { color: green; }
+.note { margin-top: 20px; color: #dc3545; font-weight: bold; }
+.notification { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: #ffeb3b; padding: 8px 15px; border-radius: 5px; font-weight: bold; display: none; }
+#qrcode { margin-top: 15px; }
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>Silver Plan Payment</h2>
-    <p>Please deposit <strong>$500 (equivalent in BTC)</strong> to the address below:</p>
-    
-    <div class="btc-address" id="btcAddress">3A1UXesRiNE36KT9pAJxWyEofD46fASsxC</div>
-    <button class="copy-btn" onclick="copyAddress()">📋 Copy Address</button>
-    
-    <p>After payment, send your receipt to our agent:  
-      <br><a href="https://wa.me/1234567890" target="_blank">📲 Click here to WhatsApp Agent</a>
-    </p>
+<div class="container">
+  <div id="notification" class="notification"></div>
 
-    <button class="confirm-btn" onclick="confirmPayment()">✅ I've Paid</button>
-    
-    <div class="note">⚠️ Your mining will start automatically after confirmation.</div>
+  <h2>Silver Plan Payment</h2>
+  <p>Deposit <strong>$500 (0.018 BTC/day)</strong> to the address below:</p>
+
+  <div class="btc-address" id="btcAddress">3A1UXesRiNE36KT9pAJxWyEofD46fASsxC</div>
+
+  <div id="qrcode"></div>
+
+  <button class="copy-btn" id="copyBtn">📋 Copy BTC Address</button>
+
+  <p>Then send receipt to agent or upload screenshot:</p>
+  <a href="https://wa.me/+2349025600630" target="_blank" id="whatsappLink" class="send-agent">📲 WhatsApp Agent</a>
+  <input type="file" id="screenshot" accept="image/*" style="margin-top:10px;">
+  <button id="uploadBtn" class="upload-btn">Upload Screenshot</button>
+
+  <button class="confirm-btn" id="confirmBtn">✅ I've Paid</button>
+
+  <div class="status">
+    <span id="step1" class="pending">Copy BTC Address: ❌</span>
+    <span id="step2" class="pending">Send to Agent OR Upload Screenshot: ❌</span>
+    <span id="step3" class="pending">Confirm Payment: ❌</span>
   </div>
 
-  <script>
-    // Redirect to register/login if not logged in
-    if(localStorage.getItem("isLoggedIn") !== "true"){
-      localStorage.setItem("pendingPlan", "Silver");
-      alert("You must login/register first to buy this plan.");
-      window.location.href = "register.html";
-    }
+  <div class="note">⚠️ Mining will start automatically 5 seconds after confirmation.</div>
+</div>
 
-    function copyAddress() {
-      const btcAddress = document.getElementById("btcAddress").innerText;
-      navigator.clipboard.writeText(btcAddress);
-      alert("BTC Address copied to clipboard!");
-    }
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+const btcAddress = document.getElementById("btcAddress").innerText;
+QRCode.toCanvas(document.getElementById('qrcode'), btcAddress, { width: 150 });
 
-    function confirmPayment() {
-      const currentUser = localStorage.getItem("currentUser");
-      if(!currentUser) { 
-        alert("User not found. Please login."); 
-        window.location.href="login.html"; 
-        return; 
-      }
+const copyBtn = document.getElementById("copyBtn");
+const whatsappLink = document.getElementById("whatsappLink");
+const uploadBtn = document.getElementById("uploadBtn");
+const screenshotInput = document.getElementById("screenshot");
+const confirmBtn = document.getElementById("confirmBtn");
+const step1 = document.getElementById("step1");
+const step2 = document.getElementById("step2");
+const step3 = document.getElementById("step3");
+const notification = document.getElementById("notification");
 
-      let users = JSON.parse(localStorage.getItem("users")) || {};
-      users[currentUser] = users[currentUser] || {};
-      users[currentUser].plan = "Silver";
-      users[currentUser].paymentConfirmed = false; // start mining after delay
-      users[currentUser].balance = 0;
-      users[currentUser].totalMined = 0;
-      localStorage.setItem("users", JSON.stringify(users));
+let copiedAddress = false;
+let actionDone = false;
 
-      alert("Payment confirmed! Redirecting to dashboard...");
-      window.location.href = "dashboard.html";
-    }
-  </script>
+uploadBtn.disabled = true;
+confirmBtn.disabled = true;
+whatsappLink.style.pointerEvents = "none";
+
+function showNotification(msg) {
+  notification.innerText = msg;
+  notification.style.display = "block";
+  setTimeout(() => { notification.style.display = "none"; }, 3000);
+}
+
+// Copy button
+copyBtn.addEventListener("click", function() {
+  navigator.clipboard.writeText(btcAddress).then(() => {
+    copiedAddress = true;
+    step1.textContent = "Copy BTC Address: ✅";
+    step1.classList.replace("pending","done");
+    whatsappLink.classList.add("active");
+    whatsappLink.style.pointerEvents = "auto";
+    uploadBtn.classList.add("active");
+    uploadBtn.disabled = false;
+    showNotification("BTC address copied! You can now send to agent or upload screenshot.");
+  });
+});
+
+// Send to agent
+whatsappLink.addEventListener("click", function(event) {
+  if(!copiedAddress){ event.preventDefault(); showNotification("Copy BTC address first."); return; }
+  actionDone = true;
+  step2.textContent = "Send to Agent OR Upload Screenshot: ✅";
+  step2.classList.replace("pending","done");
+  confirmBtn.disabled = false;
+  confirmBtn.classList.add("active");
+  showNotification("Receipt sent to agent! You can now confirm payment.");
+});
+
+// Screenshot upload
+uploadBtn.addEventListener("click", function() {
+  if(!screenshotInput.files[0]) { showNotification("Please select an image first."); return; }
+  const fileExt = screenshotInput.files[0].name.split('.').pop().toLowerCase();
+  if(!["png","jpg","jpeg"].includes(fileExt)) { showNotification("Invalid file type."); return; }
+  actionDone = true;
+  step2.textContent = "Screenshot Uploaded ✅";
+  step2.classList.replace("pending","done");
+  confirmBtn.disabled = false;
+  confirmBtn.classList.add("active");
+  showNotification("Screenshot uploaded! You can now confirm payment.");
+});
+
+// Confirm payment
+confirmBtn.addEventListener("click", function() {
+  if(!copiedAddress || !actionDone) { showNotification("Copy BTC address first and send/upload receipt."); return; }
+
+  const currentUser = localStorage.getItem("currentUser");
+  if(!currentUser){ showNotification("User not found."); setTimeout(()=>window.location.href="login.html",2000); return; }
+
+  let users = JSON.parse(localStorage.getItem("users")) || {};
+  users[currentUser] = users[currentUser] || {};
+  users[currentUser].plan = "Silver";
+  users[currentUser].paymentConfirmed = false;
+  users[currentUser].balance = 0;
+  users[currentUser].totalMined = 0;
+  localStorage.setItem("users", JSON.stringify(users));
+
+  step3.textContent = "Confirm Payment: ✅";
+  step3.classList.replace("pending","done");
+  showNotification("Payment confirmed! Mining starts in 5 seconds.");
+
+  setTimeout(()=>{
+    let users = JSON.parse(localStorage.getItem("users")) || {};
+    users[currentUser].paymentConfirmed = true;
+    localStorage.setItem("users", JSON.stringify(users));
+  },5000);
+
+  setTimeout(()=>{ window.location.href="dashboard.html"; },2000);
+});
+</script>
 </body>
 </html>

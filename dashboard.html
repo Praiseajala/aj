@@ -21,96 +21,124 @@
   .logout-btn:hover { background: #b02a37; }
   .buy-btn { background: #28a745; }
   .buy-btn:hover { background: #218838; }
-  .notification { margin: 15px auto; padding: 10px; border-radius: 5px; max-width: 600px; text-align: center; display: none; }
-  .notification.success { background: #d4edda; color: #155724; }
-  .notification.error { background: #f8d7da; color: #721c24; }
-  .notification.info { background: #cce5ff; color: #004085; }
   .progress-container { background: #e0e0e0; border-radius: 20px; margin: 10px 0; height: 25px; width: 100%; overflow: hidden; }
   .progress-bar { height: 100%; width: 0%; background: #28a745; border-radius: 20px; text-align: center; color: white; line-height: 25px; font-weight: bold; transition: width 1s linear; }
   .stats-grid { display: flex; justify-content: space-around; flex-wrap: wrap; }
   .stat-box { background: #f9f9f9; padding: 15px; margin: 10px; border-radius: 10px; flex: 1 1 250px; }
   .stat-box h4 { margin: 5px 0; }
   @media (max-width: 768px) { nav a { display: block; margin: 10px 0; } .stats-grid { flex-direction: column; align-items: center; } }
+
+  /* Notification Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+  }
+  .modal-content {
+    background: #fff;
+    margin: 20% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .modal-content button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .modal-content button:hover { background: #218838; }
 </style>
 </head>
 <body>
 
-  <header>
-    <h1>BTC Mining Pro Dashboard</h1>
-  </header>
-  
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="plans.html">Plans</a>
-    <a href="withdraw.html">Withdraw</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-  
-  <div class="container">
-    <div id="notification" class="notification"></div>
-  
-    <!-- Plan Info -->
-    <div class="card">
-      <h3>Your Plan</h3>
-      <div id="planName">No Plan Selected</div>
-      <button id="buyPlanBtn" class="buy-btn" onclick="goToPlans()" style="display:none;">Buy a Plan</button>
-    </div>
-  
-    <!-- Payment Status -->
-    <div class="card">
-      <h3>Payment Status</h3>
-      <div id="paymentStatus" class="status pending"></div>
-    </div>
-  
-    <!-- Mining Info -->
-    <div class="card">
-      <h3>Mining Rate</h3>
-      <div id="miningRate">0 BTC/day</div>
-    </div>
-  
-    <div class="card">
-      <h3>Mining Balance</h3>
-      <div class="balance" id="miningBalance">0.000000 BTC</div>
-      <div class="progress-container">
-        <div class="progress-bar" id="progressBar">0%</div>
-      </div>
-    </div>
-  
-    <!-- Earnings & Referral Stats -->
-    <div class="card stats-grid">
-      <div class="stat-box">
-        <h4>Total BTC Mined</h4>
-        <div id="totalMined">0.000000 BTC</div>
-      </div>
-      <div class="stat-box">
-        <h4>Estimated Earnings</h4>
-        <div id="estimatedEarnings">$0.00</div>
-      </div>
-      <div class="stat-box">
-        <h4>Referral Stats</h4>
-        <div id="referrals">0 Referrals</div>
-      </div>
-    </div>
-  
-    <!-- Logout -->
-    <div class="card">
-      <button class="logout-btn" onclick="logout()">Logout</button>
+<header>
+  <h1>BTC Mining Pro Dashboard</h1>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="plans.html">Plans</a>
+  <a href="withdraw.html">Withdraw</a>
+  <a href="contact.html">Contact</a>
+</nav>
+
+<div class="container">
+  <!-- Plan Info -->
+  <div class="card">
+    <h3>Your Plan</h3>
+    <div id="planName">No Plan Selected</div>
+    <button id="buyPlanBtn" class="buy-btn" onclick="goToPlans()" style="display:none;">Buy a Plan</button>
+  </div>
+
+  <!-- Payment Status -->
+  <div class="card">
+    <h3>Payment Status</h3>
+    <div id="paymentStatus" class="status pending"></div>
+  </div>
+
+  <!-- Mining Info -->
+  <div class="card">
+    <h3>Mining Rate</h3>
+    <div id="miningRate">0 BTC/day</div>
+  </div>
+
+  <div class="card">
+    <h3>Mining Balance</h3>
+    <div class="balance" id="miningBalance">0.000000 BTC</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar">0%</div>
     </div>
   </div>
-  
-  <script>
-  const btcPriceUSD = 30000;
 
-// Plan daily mining rates in BTC/day
+  <!-- Earnings & Referral Stats -->
+  <div class="card stats-grid">
+    <div class="stat-box">
+      <h4>Total BTC Mined</h4>
+      <div id="totalMined">0.000000 BTC</div>
+    </div>
+    <div class="stat-box">
+      <h4>Estimated Earnings</h4>
+      <div id="estimatedEarnings">$0.00</div>
+    </div>
+    <div class="stat-box">
+      <h4>Referral Stats</h4>
+      <div id="referrals">0 Referrals</div>
+    </div>
+  </div>
+
+  <!-- Logout -->
+  <div class="card">
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div id="notificationModal" class="modal">
+  <div class="modal-content">
+    <p id="notificationMessage"></p>
+    <button id="closeNotificationBtn">Close</button>
+  </div>
+</div>
+
+<script>
+const btcPriceUSD = 30000;
 const planRates = { "Starter": 0.006, "Silver": 0.018, "Gold": 0.04 };
 
-// Fetch current logged-in user
 const currentUser = localStorage.getItem("currentUser");
 let users = JSON.parse(localStorage.getItem("users")) || {};
 let userData = users[currentUser] || { plan:"", paymentConfirmed:false, balance:0, totalMined:0, referrals:0 };
 
-// DOM Elements
 const planName = document.getElementById("planName");
 const paymentStatus = document.getElementById("paymentStatus");
 const miningRate = document.getElementById("miningRate");
@@ -121,28 +149,29 @@ const estimatedEarningsEl = document.getElementById("estimatedEarnings");
 const referralsEl = document.getElementById("referrals");
 const buyPlanBtn = document.getElementById("buyPlanBtn");
 
-// Track last mining timestamp
 let lastMiningTime = parseInt(localStorage.getItem(currentUser + "_lastMine")) || Date.now();
 
-// Notification function
+// Notification modal elements
+const notificationModal = document.getElementById("notificationModal");
+const notificationMessage = document.getElementById("notificationMessage");
+const closeNotificationBtn = document.getElementById("closeNotificationBtn");
+
 function showNotification(type,message){
-  alert(message); // simple alert, can be replaced with fancier UI
+  notificationMessage.innerText = message;
+  notificationModal.style.display = "block";
 }
 
-// Progress bar
+closeNotificationBtn.onclick = function(){ notificationModal.style.display = "none"; }
+window.onclick = function(event){ if(event.target == notificationModal){ notificationModal.style.display = "none"; } }
+
 function updateProgressBar(){
   const plan = userData.plan;
-  if(!plan){ 
-    progressBar.style.width = "0%"; 
-    progressBar.innerText = "0%"; 
-    return;
-  }
+  if(!plan){ progressBar.style.width = "0%"; progressBar.innerText = "0%"; return; }
   const percent = Math.min((userData.balance / planRates[plan])*100,100);
   progressBar.style.width = percent + "%";
   progressBar.innerText = percent.toFixed(1) + "%";
 }
 
-// Start mining (payment confirmation)
 function startMining() {
   if(userData.plan && !userData.paymentConfirmed){
     paymentStatus.innerHTML = "⏳ Starting Mining...";
@@ -161,7 +190,6 @@ function startMining() {
   }
 }
 
-// Update dashboard
 function updateDashboard(){
   const plan = userData.plan;
   planName.innerText = plan || "No Plan Bought";
@@ -187,14 +215,12 @@ function updateDashboard(){
   updateProgressBar();
 }
 
-// Logout and navigation
 function logout(){ localStorage.removeItem("currentUser"); window.location.href="index.html"; }
 function goToPlans(){ window.location.href="plans.html"; }
 
-// Offline Mining Boost Button
 function offlineBoost() {
   if(userData.plan && userData.paymentConfirmed){
-    const boost = planRates[userData.plan] * 0.1; // +10% instant boost
+    const boost = planRates[userData.plan] * 0.1;
     userData.balance += boost;
     userData.totalMined += boost;
     users[currentUser] = userData;
@@ -206,16 +232,13 @@ function offlineBoost() {
 
 updateDashboard();
 
-// Mining simulation (offline-persistent)
 setInterval(()=>{
   if(userData.plan && userData.paymentConfirmed){
     const now = Date.now();
     const secondsPassed = (now - lastMiningTime)/1000;
-
-    const increment = planRates[userData.plan]/24/60/60 * secondsPassed; // BTC per second
+    const increment = planRates[userData.plan]/24/60/60 * secondsPassed;
     userData.balance += increment;
     userData.totalMined += increment;
-
     users[currentUser] = userData;
     localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem(currentUser + "_lastMine", now);
@@ -224,12 +247,10 @@ setInterval(()=>{
     totalMinedEl.innerText = userData.totalMined.toFixed(6) + " BTC";
     estimatedEarningsEl.innerText = "$" + (userData.totalMined*btcPriceUSD).toFixed(2);
     updateProgressBar();
-
     lastMiningTime = now;
   }
 },1000);
+</script>
 
-  </script>
-  
-  </body>
-  </html>
+</body>
+</html>
