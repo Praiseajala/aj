@@ -6,25 +6,189 @@
 <title>BTC Mining Pro | Home</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  /* Responsive adjustments for index */
+  /* General */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f2f4f8;
+    color: #333;
+  }
+
+  /* Navbar */
+  nav {
+    display: flex;
+    justify-content: center;
+    background: #1a1a2e;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  nav a:hover {
+    color: #ffc107;
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    padding: 100px 20px;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('https://picjumbo.com/wp-content/uploads/glowing-bitcoin-logo-ready-to-explode-free-photo.jpeg') no-repeat center center/cover;
+  }
+  .hero h1 { font-size: 3em; margin-bottom: 10px; color: #ffcb05; text-shadow: 2px 2px 6px #000; }
+  .hero p { font-size: 1.5em; margin-bottom: 20px; }
+  .hero-buttons { margin-top: 20px; }
+  .hero-buttons button {
+    padding: 12px 25px; margin: 5px;
+    border: none; border-radius: 5px; font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .hero-buttons button:hover { transform: scale(1.05); }
+  .btn-primary { background: #ffcb05; color: #1a1a2e; }
+  .btn-primary:hover { background: #e6b800; }
+  .btn-secondary { background: #007bff; color: #fff; }
+  .btn-secondary:hover { background: #0056b3; }
+
+  .trust-badges {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .trust-badge { background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 5px; font-weight: bold; }
+
+  /* Features Section */
+  .features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 50px 20px;
+    flex-wrap: wrap;
+    background: #fff;
+  }
+  .feature {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    cursor: pointer;
+  }
+  .feature:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    background: #ffcb05;
+    color: #1a1a2e;
+  }
+
+  /* Plans Section */
+  .plans-preview { text-align: center; padding: 50px 20px; background: #f2f4f8; }
+  .plan-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .plan {
+    background: #fff;
+    padding: 25px 20px;
+    border-radius: 15px;
+    width: 220px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .plan:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+    background: #ffcb05;
+    color: #1a1a2e;
+  }
+
+  /* Stats Section */
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    padding: 50px 20px;
+    background: #1a1a2e;
+    color: #fff;
+    flex-wrap: wrap;
+  }
+  .stat { font-size: 1.2em; font-weight: bold; }
+
+  /* Testimonials */
+  .testimonials { text-align: center; padding: 50px 20px; background: #fff; }
+  .testimonial-carousel {
+    position: relative;
+    max-width: 650px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .testimonial-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  .testimonial {
+    min-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 30px 20px;
+    background: #f2f4f8;
+    border-radius: 10px;
+    margin: 0 5px;
+  }
+  .testimonial img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ffcb05; color: #1a1a2e; border: none; border-radius: 50%;
+    width: 35px; height: 35px; cursor: pointer; font-size: 18px;
+    transition: background 0.3s;
+  }
+  .carousel-btn:hover { background: #e6b800; }
+  .carousel-btn.left { left: 10px; }
+  .carousel-btn.right { right: 10px; }
+
+  /* FAQ Section */
+  .faq { padding: 50px 20px; background: #1a1a2e; color: #fff; max-width: 800px; margin: 0 auto; border-radius: 10px; }
+  .faq h2 { text-align: center; margin-bottom: 30px; color: #ffcb05; }
+  .faq-item { margin-bottom: 15px; }
+  .faq-item summary { font-weight: bold; cursor: pointer; }
+  .faq-item p { margin-left: 15px; }
+
+  /* Footer */
+  footer { text-align: center; padding: 20px; background: #1a1a2e; color: #fff; }
+  footer a { color: #ffcb05; margin: 0 5px; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* Responsive */
   @media (max-width: 768px) {
     .hero { padding: 60px 10px; }
     .hero h1 { font-size: 2em; }
     .hero p { font-size: 1em; }
-    .features, .plan-cards { flex-direction: column; align-items: center; }
+    .features, .plan-cards, .stats { flex-direction: column; align-items: center; }
     .feature, .plan { width: 90%; margin-bottom: 20px; }
     nav a { display: block; margin: 10px 0; }
-    .stats { flex-direction: column; gap: 20px; }
-    .testimonial { margin: 15px auto; }
+    .testimonial-carousel { max-width: 100%; }
   }
-
-  /* Hero buttons */
-  .hero-buttons { margin-top: 20px; }
-  .hero-buttons button { padding: 12px 25px; margin: 5px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-  .btn-primary { background: #28a745; color: #fff; }
-  .btn-primary:hover { background: #218838; }
-  .btn-secondary { background: #ffc107; color: #000; }
-  .btn-secondary:hover { background: #e0a800; }
 </style>
 </head>
 <body>
@@ -47,6 +211,10 @@
     <button id="btnRegister" class="btn-secondary">Register</button>
     <button id="btnLogin" class="btn-secondary">Sign In</button>
   </div>
+  <div class="trust-badges">
+    <div class="trust-badge">✅ Certified Secure</div>
+    <div class="trust-badge">🔒 SSL Secured</div>
+  </div>
 </section>
 
 <!-- Features Section -->
@@ -57,19 +225,19 @@
   <div class="feature">🤝 24/7 Customer Support</div>
 </section>
 
-<!-- Plans Preview (Info Only) -->
+<!-- Plans Preview -->
 <section class="plans-preview">
   <h2>Choose Your Plan</h2>
   <div class="plan-cards">
-    <div class="plan">
+    <div class="plan" onclick="window.location.href='register.html'">
       <h3>Starter Plan</h3>
       <p>$200 | 0.006 BTC/day</p>
     </div>
-    <div class="plan">
+    <div class="plan" onclick="window.location.href='register.html'">
       <h3>Silver Plan</h3>
       <p>$500 | 0.018 BTC/day</p>
     </div>
-    <div class="plan">
+    <div class="plan" onclick="window.location.href='register.html'">
       <h3>Gold Plan</h3>
       <p>$1,000 | 0.04 BTC/day</p>
     </div>
@@ -86,15 +254,56 @@
 <!-- Testimonials Section -->
 <section class="testimonials">
   <h2>What Our Clients Say</h2>
-  <div class="testimonial">⭐⭐⭐⭐⭐<br>“I started with the Starter Plan and I’m already seeing returns!” – John D.</div>
-  <div class="testimonial">⭐⭐⭐⭐<br>“Great support team and easy to use dashboard.” – Sarah K.</div>
+  <div class="testimonial-carousel">
+    <button class="carousel-btn left" onclick="prevTestimonial()">&#10094;</button>
+    <div class="testimonial-track">
+      <div class="testimonial">
+        <img src="https://img.freepik.com/premium-vector/avatar-profile-icon-flat-style-female-user-profile-vector-illustration-isolated-background-women-profile-sign-business-concept_157943-38866.jpg" alt="John D.">
+        <p>⭐⭐⭐⭐⭐<br>“I started with the Starter Plan and I’m already seeing returns!” – John D.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://media.istockphoto.com/id/588258370/vector/male-avatar-profile-picture-vector.jpg?s=612x612&w=0&k=20&c=HySLtDNJEd_wzsAjchZxWstBToxkMHSI2rKHNss7CD0=" alt="Sarah K.">
+        <p>⭐⭐⭐⭐<br>“Great support team and easy to use dashboard.” – Sarah K.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg" alt="Michael B.">
+        <p>⭐⭐⭐⭐⭐<br>“Fast payouts and excellent service.” – Michael B.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://img.freepik.com/premium-vector/avatar-profile-icon-flat-style-female-user-profile-vector-illustration-isolated-background-women-profile-sign-business-concept_157943-38866.jpg" alt="Emily R.">
+        <p>⭐⭐⭐⭐<br>“User-friendly platform for both beginners and pros.” – Emily R.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://static.vecteezy.com/system/resources/previews/002/002/403/non_2x/man-with-beard-avatar-character-isolated-icon-free-vector.jpg" alt="David W.">
+        <p>⭐⭐⭐⭐⭐<br>“Highly recommended for anyone looking to mine BTC safely.” – David W.</p>
+      </div>
+    </div>
+    <button class="carousel-btn right" onclick="nextTestimonial()">&#10095;</button>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq">
+  <h2>Frequently Asked Questions</h2>
+  <details class="faq-item">
+    <summary>How fast can I start mining?</summary>
+    <p>You can start mining immediately after registration and selecting a plan. Mining starts automatically.</p>
+  </details>
+  <details class="faq-item">
+    <summary>How do I withdraw my earnings?</summary>
+    <p>Withdrawals are simple: go to your dashboard, click withdraw, and follow the instructions.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Is it secure?</summary>
+    <p>Yes, our platform uses SSL encryption and is fully certified to ensure your funds and data are safe.</p>
+  </details>
 </section>
 
 <!-- Footer -->
 <footer>
   <p>&copy; 2025 BTC Mining Pro. All Rights Reserved.</p>
   <p>
-    <a href="#">About Us</a> |
+    <a href="about.html">About Us</a> |
     <a href="#">Terms</a> |
     <a href="#">Privacy</a>
   </p>
@@ -102,7 +311,7 @@
 
 <!-- JS -->
 <script>
-  // Hero button behavior
+  // Hero buttons
   function updateHeroButtons() {
     const loggedIn = localStorage.getItem("loggedIn") === "true";
     const currentUser = localStorage.getItem("currentUser");
@@ -126,9 +335,30 @@
       btnLogin.onclick = () => { window.location.href="login.html"; };
     }
   }
-
-  // Initialize buttons
   updateHeroButtons();
+
+  // Testimonial Carousel with Autoplay
+  const track = document.querySelector('.testimonial-track');
+  const testimonials = document.querySelectorAll('.testimonial');
+  let currentIndex = 0;
+
+  function showTestimonial(index) {
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  function nextTestimonial() {
+    currentIndex = (currentIndex + 1) % testimonials.length;
+    showTestimonial(currentIndex);
+  }
+
+  function prevTestimonial() {
+    currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+    showTestimonial(currentIndex);
+  }
+
+  showTestimonial(currentIndex);
+  // Autoplay every 5 seconds
+  setInterval(nextTestimonial, 5000);
 </script>
 
 </body>

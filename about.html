@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us | BTC Mining Pro</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f2f4f8;
+    color: #333;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    background: #1a1a2e;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
+  nav a:hover { color: #ffc107; }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    padding: 100px 20px;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('https://picjumbo.com/wp-content/uploads/glowing-bitcoin-logo-ready-to-explode-free-photo.jpeg') no-repeat center center/cover;
+  }
+  .hero h1 { font-size: 3em; margin-bottom: 10px; color: #ffcb05; text-shadow: 2px 2px 6px #000; }
+  .hero p { font-size: 1.5em; margin-bottom: 20px; }
+
+  /* Company Story */
+  .company-story {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .company-story h2 { color: #1a1a2e; font-size: 2em; margin-bottom: 15px; }
+  .company-story p { font-size: 1.1em; line-height: 1.6; }
+
+  /* Milestones */
+  .milestones {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    padding: 50px 20px;
+    background: #1a1a2e;
+    color: #fff;
+    text-align: center;
+  }
+  .milestone { font-size: 1.5em; font-weight: bold; }
+  .milestone span { display: block; font-size: 2em; color: #ffcb05; }
+
+  /* Testimonials */
+  .testimonials { text-align: center; padding: 50px 20px; background: #fff; }
+  .testimonial-carousel {
+    position: relative;
+    max-width: 650px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .testimonial-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  .testimonial {
+    min-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 30px 20px;
+    background: #f2f4f8;
+    border-radius: 10px;
+    margin: 0 5px;
+  }
+  .testimonial img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ffcb05; color: #1a1a2e; border: none; border-radius: 50%;
+    width: 35px; height: 35px; cursor: pointer; font-size: 18px;
+    transition: background 0.3s;
+  }
+  .carousel-btn:hover { background: #e6b800; }
+  .carousel-btn.left { left: 10px; }
+  .carousel-btn.right { right: 10px; }
+
+  /* FAQ Section */
+  .faq { padding: 50px 20px; background: #1a1a2e; color: #fff; max-width: 800px; margin: 0 auto; border-radius: 10px; }
+  .faq h2 { text-align: center; margin-bottom: 30px; color: #ffcb05; }
+  .faq-item { margin-bottom: 15px; }
+  .faq-item summary { font-weight: bold; cursor: pointer; }
+  .faq-item p { margin-left: 15px; }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    padding: 50px 20px;
+    background: #ffcb05;
+  }
+  .cta h2 { color: #1a1a2e; font-size: 2em; margin-bottom: 20px; }
+  .cta button { padding: 15px 30px; font-size: 1.2em; border: none; border-radius: 10px; background: #1a1a2e; color: #ffcb05; cursor: pointer; transition: transform 0.3s; }
+  .cta button:hover { transform: scale(1.05); background: #000; }
+
+  /* Footer */
+  footer { text-align: center; padding: 20px; background: #1a1a2e; color: #fff; }
+  footer a { color: #ffcb05; margin: 0 5px; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero { padding: 60px 10px; }
+    .hero h1 { font-size: 2em; }
+    .hero p { font-size: 1em; }
+    .milestones { flex-direction: column; gap: 30px; }
+    nav a { display: block; margin: 10px 0; }
+    .testimonial-carousel { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="plans.html">Plans</a>
+  <a href="withdraw.html">Withdraw</a>
+  <a href="contact.html">Contact</a>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <h1>About BTC Mining Pro</h1>
+  <p>Trusted. Secure. Innovative. Discover who we are and why thousands of users rely on us.</p>
+</section>
+
+<!-- Company Story -->
+<section class="company-story">
+  <h2>Our Mission</h2>
+  <p>At BTC Mining Pro, our mission is to provide a secure, reliable, and accessible platform for cryptocurrency mining. We believe in transparency, innovation, and empowering our clients to grow their digital assets efficiently and safely.</p>
+  <p>Since our inception, we have focused on leveraging cutting-edge technology to ensure consistent mining performance and fast payouts. Our goal is to simplify crypto mining for everyone, from beginners to experienced miners.</p>
+</section>
+
+<!-- Milestones -->
+<section class="milestones">
+  <div class="milestone"><span>3500 BTC</span>Mined</div>
+  <div class="milestone"><span>2,500+</span>Users</div>
+  <div class="milestone"><span>$1,200,000+</span>Paid</div>
+  <div class="milestone"><span>99.9%</span>Uptime</div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials">
+  <h2>What Our Clients Say</h2>
+  <div class="testimonial-carousel">
+    <button class="carousel-btn left" onclick="prevTestimonial()">&#10094;</button>
+    <div class="testimonial-track">
+      <div class="testimonial">
+        <img src="https://i.ibb.co/8b9tYQ3/avatar1.png" alt="John D.">
+        <p>⭐⭐⭐⭐⭐<br>“I started with the Starter Plan and I’m already seeing returns!” – John D.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://i.ibb.co/3NLvYF9/avatar2.png" alt="Sarah K.">
+        <p>⭐⭐⭐⭐<br>“Great support team and easy to use dashboard.” – Sarah K.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://i.ibb.co/cFfVbHz/avatar3.png" alt="Michael B.">
+        <p>⭐⭐⭐⭐⭐<br>“Fast payouts and excellent service.” – Michael B.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://i.ibb.co/0J5tShC/avatar4.png" alt="Emily R.">
+        <p>⭐⭐⭐⭐<br>“User-friendly platform for both beginners and pros.” – Emily R.</p>
+      </div>
+      <div class="testimonial">
+        <img src="https://i.ibb.co/LxFkX7F/avatar5.png" alt="David W.">
+        <p>⭐⭐⭐⭐⭐<br>“Highly recommended for anyone looking to mine BTC safely.” – David W.</p>
+      </div>
+    </div>
+    <button class="carousel-btn right" onclick="nextTestimonial()">&#10095;</button>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq">
+  <h2>Frequently Asked Questions</h2>
+  <details class="faq-item">
+    <summary>Who are we?</summary>
+    <p>We are a trusted cryptocurrency mining company, committed to delivering fast, secure, and transparent mining services worldwide.</p>
+  </details>
+  <details class="faq-item">
+    <summary>How safe is our platform?</summary>
+    <p>We use SSL encryption, certified secure servers, and continuous monitoring to ensure your data and funds are protected at all times.</p>
+  </details>
+  <details class="faq-item">
+    <summary>Can anyone start mining?</summary>
+    <p>Yes, whether you are a beginner or an experienced miner, our platform is designed to make crypto mining easy and efficient.</p>
+  </details>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>Ready to Start Mining?</h2>
+  <button onclick="window.location.href='register.html'">Get Started Now</button>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 BTC Mining Pro. All Rights Reserved.</p>
+  <p>
+    <a href="#">About Us</a> |
+    <a href="#">Terms</a> |
+    <a href="#">Privacy</a>
+  </p>
+</footer>
+
+<!-- JS -->
+<script>
+  // Testimonial Carousel
+  const track = document.querySelector('.testimonial-track');
+  const testimonials = document.querySelectorAll('.testimonial');
+  let currentIndex = 0;
+
+  function showTestimonial(index) {
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  function nextTestimonial() {
+    currentIndex = (currentIndex + 1) % testimonials.length;
+    showTestimonial(currentIndex);
+  }
+
+  function prevTestimonial() {
+    currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+    showTestimonial(currentIndex);
+  }
+
+  showTestimonial(currentIndex);
+  setInterval(nextTestimonial, 5000); // Autoplay
+</script>
+
+</body>
+</html>
