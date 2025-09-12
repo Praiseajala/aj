@@ -101,104 +101,134 @@
   
   <script>
   const btcPriceUSD = 30000;
-  
-  // Plan daily mining rates in BTC/day
-  const planRates = { "Starter": 0.006, "Silver": 0.018, "Gold": 0.04 };
-  
-  // Fetch current logged-in user
-  const currentUser = localStorage.getItem("currentUser");
-  let users = JSON.parse(localStorage.getItem("users")) || {};
-  let userData = users[currentUser] || { plan:"", paymentConfirmed:false, balance:0, totalMined:0, referrals:0 };
-  
-  const planName = document.getElementById("planName");
-  const paymentStatus = document.getElementById("paymentStatus");
-  const miningRate = document.getElementById("miningRate");
-  const miningBalance = document.getElementById("miningBalance");
-  const progressBar = document.getElementById("progressBar");
-  const totalMinedEl = document.getElementById("totalMined");
-  const estimatedEarningsEl = document.getElementById("estimatedEarnings");
-  const referralsEl = document.getElementById("referrals");
-  const buyPlanBtn = document.getElementById("buyPlanBtn");
-  
-  function showNotification(type,message){
-    alert(message);
+
+// Plan daily mining rates in BTC/day
+const planRates = { "Starter": 0.006, "Silver": 0.018, "Gold": 0.04 };
+
+// Fetch current logged-in user
+const currentUser = localStorage.getItem("currentUser");
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let userData = users[currentUser] || { plan:"", paymentConfirmed:false, balance:0, totalMined:0, referrals:0 };
+
+// DOM Elements
+const planName = document.getElementById("planName");
+const paymentStatus = document.getElementById("paymentStatus");
+const miningRate = document.getElementById("miningRate");
+const miningBalance = document.getElementById("miningBalance");
+const progressBar = document.getElementById("progressBar");
+const totalMinedEl = document.getElementById("totalMined");
+const estimatedEarningsEl = document.getElementById("estimatedEarnings");
+const referralsEl = document.getElementById("referrals");
+const buyPlanBtn = document.getElementById("buyPlanBtn");
+
+// Track last mining timestamp
+let lastMiningTime = parseInt(localStorage.getItem(currentUser + "_lastMine")) || Date.now();
+
+// Notification function
+function showNotification(type,message){
+  alert(message); // simple alert, can be replaced with fancier UI
+}
+
+// Progress bar
+function updateProgressBar(){
+  const plan = userData.plan;
+  if(!plan){ 
+    progressBar.style.width = "0%"; 
+    progressBar.innerText = "0%"; 
+    return;
   }
-  
-  function updateProgressBar(){
-    const plan = userData.plan;
-    if(!plan){ 
-      progressBar.style.width = "0%"; 
-      progressBar.innerText = "0%"; 
-      return;
-    }
-    const percent = Math.min((userData.balance / planRates[plan])*100,100);
-    progressBar.style.width = percent + "%";
-    progressBar.innerText = percent.toFixed(1) + "%";
-  }
-  
-  function startMining() {
-    if(userData.plan && !userData.paymentConfirmed){
-      paymentStatus.innerHTML = "⏳ Starting Mining...";
-      paymentStatus.classList.remove("confirmed");
-      paymentStatus.classList.add("pending");
-  
-      setTimeout(()=>{
-        userData.paymentConfirmed = true;
-        users[currentUser] = userData;
-        localStorage.setItem("users", JSON.stringify(users));
-        paymentStatus.innerHTML = "✅ Mining Started!";
-        paymentStatus.classList.remove("pending");
-        paymentStatus.classList.add("confirmed");
-        showNotification("success","Mining has started!");
-      }, 5000);
-    }
-  }
-  
-  function updateDashboard(){
-    const plan = userData.plan;
-    planName.innerText = plan || "No Plan Bought";
-    buyPlanBtn.style.display = plan ? "none" : "inline-block";
-    miningRate.innerText = plan ? planRates[plan] + " BTC/day" : "0 BTC/day";
-  
-    if(plan && !userData.paymentConfirmed){
-      startMining();
-    } else if(plan && userData.paymentConfirmed){
+  const percent = Math.min((userData.balance / planRates[plan])*100,100);
+  progressBar.style.width = percent + "%";
+  progressBar.innerText = percent.toFixed(1) + "%";
+}
+
+// Start mining (payment confirmation)
+function startMining() {
+  if(userData.plan && !userData.paymentConfirmed){
+    paymentStatus.innerHTML = "⏳ Starting Mining...";
+    paymentStatus.classList.remove("confirmed");
+    paymentStatus.classList.add("pending");
+
+    setTimeout(()=>{
+      userData.paymentConfirmed = true;
+      users[currentUser] = userData;
+      localStorage.setItem("users", JSON.stringify(users));
       paymentStatus.innerHTML = "✅ Mining Started!";
       paymentStatus.classList.remove("pending");
       paymentStatus.classList.add("confirmed");
-    } else {
-      paymentStatus.innerHTML = "❌ No Plan Bought";
-      paymentStatus.classList.remove("confirmed");
-      paymentStatus.classList.add("pending");
-    }
-  
-    miningBalance.innerText = parseFloat(userData.balance).toFixed(6) + " BTC";
-    totalMinedEl.innerText = parseFloat(userData.totalMined).toFixed(6) + " BTC";
-    estimatedEarningsEl.innerText = "$" + (parseFloat(userData.totalMined)*btcPriceUSD).toFixed(2);
-    referralsEl.innerText = userData.referrals + " Referrals";
-    updateProgressBar();
+      showNotification("success","Mining has started!");
+    }, 5000);
   }
-  
-  function logout(){ localStorage.removeItem("currentUser"); window.location.href="index.html"; }
-  function goToPlans(){ window.location.href="plans.html"; }
-  
-  updateDashboard();
-  
-  // Mining simulation per second
-  setInterval(()=>{
-    if(userData.plan && userData.paymentConfirmed){
-      const increment = planRates[userData.plan]/24/60/60; // BTC per second
-      userData.balance += increment;
-      userData.totalMined += increment;
-      users[currentUser] = userData;
-      localStorage.setItem("users", JSON.stringify(users));
-  
-      miningBalance.innerText = userData.balance.toFixed(6) + " BTC";
-      totalMinedEl.innerText = userData.totalMined.toFixed(6) + " BTC";
-      estimatedEarningsEl.innerText = "$" + (userData.totalMined*btcPriceUSD).toFixed(2);
-      updateProgressBar();
-    }
-  },1000);
+}
+
+// Update dashboard
+function updateDashboard(){
+  const plan = userData.plan;
+  planName.innerText = plan || "No Plan Bought";
+  buyPlanBtn.style.display = plan ? "none" : "inline-block";
+  miningRate.innerText = plan ? planRates[plan] + " BTC/day" : "0 BTC/day";
+
+  if(plan && !userData.paymentConfirmed){
+    startMining();
+  } else if(plan && userData.paymentConfirmed){
+    paymentStatus.innerHTML = "✅ Mining Started!";
+    paymentStatus.classList.remove("pending");
+    paymentStatus.classList.add("confirmed");
+  } else {
+    paymentStatus.innerHTML = "❌ No Plan Bought";
+    paymentStatus.classList.remove("confirmed");
+    paymentStatus.classList.add("pending");
+  }
+
+  miningBalance.innerText = parseFloat(userData.balance).toFixed(6) + " BTC";
+  totalMinedEl.innerText = parseFloat(userData.totalMined).toFixed(6) + " BTC";
+  estimatedEarningsEl.innerText = "$" + (parseFloat(userData.totalMined)*btcPriceUSD).toFixed(2);
+  referralsEl.innerText = userData.referrals + " Referrals";
+  updateProgressBar();
+}
+
+// Logout and navigation
+function logout(){ localStorage.removeItem("currentUser"); window.location.href="index.html"; }
+function goToPlans(){ window.location.href="plans.html"; }
+
+// Offline Mining Boost Button
+function offlineBoost() {
+  if(userData.plan && userData.paymentConfirmed){
+    const boost = planRates[userData.plan] * 0.1; // +10% instant boost
+    userData.balance += boost;
+    userData.totalMined += boost;
+    users[currentUser] = userData;
+    localStorage.setItem("users", JSON.stringify(users));
+    updateDashboard();
+    showNotification("success", "Boost applied! +" + boost.toFixed(6) + " BTC");
+  }
+}
+
+updateDashboard();
+
+// Mining simulation (offline-persistent)
+setInterval(()=>{
+  if(userData.plan && userData.paymentConfirmed){
+    const now = Date.now();
+    const secondsPassed = (now - lastMiningTime)/1000;
+
+    const increment = planRates[userData.plan]/24/60/60 * secondsPassed; // BTC per second
+    userData.balance += increment;
+    userData.totalMined += increment;
+
+    users[currentUser] = userData;
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem(currentUser + "_lastMine", now);
+
+    miningBalance.innerText = userData.balance.toFixed(6) + " BTC";
+    totalMinedEl.innerText = userData.totalMined.toFixed(6) + " BTC";
+    estimatedEarningsEl.innerText = "$" + (userData.totalMined*btcPriceUSD).toFixed(2);
+    updateProgressBar();
+
+    lastMiningTime = now;
+  }
+},1000);
+
   </script>
   
   </body>
