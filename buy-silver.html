@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silver Plan Payment - BTC Mining Pro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      background: #fff;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    .btc-address {
+      background: #f8f9fa;
+      border: 1px dashed #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-weight: bold;
+      word-break: break-all;
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .copy-btn { background: #007bff; color: #fff; }
+    .copy-btn:hover { background: #0056b3; }
+    .confirm-btn { background: #28a745; color: #fff; }
+    .confirm-btn:hover { background: #218838; }
+    a { color: #28a745; text-decoration: none; font-weight: bold; }
+    .note { margin-top: 20px; color: #dc3545; font-weight: bold; }
+    @media (max-width: 768px) {
+      .container { width: 90%; margin: 20px auto; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Silver Plan Payment</h2>
+    <p>Please deposit <strong>$500 (equivalent in BTC)</strong> to the address below:</p>
+    
+    <div class="btc-address" id="btcAddress">3Xy4Z5a6B7c8D9e0F1gH2iJ3kL4M5n6O7P</div>
+    <button class="copy-btn" onclick="copyAddress()">📋 Copy Address</button>
+    
+    <p>After payment, send your receipt to our agent:  
+      <br><a href="https://wa.me/1234567890" target="_blank">📲 Click here to WhatsApp Agent</a>
+    </p>
+
+    <button class="confirm-btn" onclick="confirmPayment()">✅ I've Paid</button>
+    
+    <div class="note">⚠️ Your mining will start automatically after confirmation.</div>
+  </div>
+
+  <script>
+    // Redirect to register/login if not logged in
+    if(localStorage.getItem("isLoggedIn") !== "true"){
+      localStorage.setItem("pendingPlan", "Silver");
+      alert("You must login/register first to buy this plan.");
+      window.location.href = "register.html";
+    }
+
+    function copyAddress() {
+      const btcAddress = document.getElementById("btcAddress").innerText;
+      navigator.clipboard.writeText(btcAddress);
+      alert("BTC Address copied to clipboard!");
+    }
+
+    function confirmPayment() {
+      const currentUser = localStorage.getItem("currentUser");
+      if(!currentUser) { 
+        alert("User not found. Please login."); 
+        window.location.href="login.html"; 
+        return; 
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+      users[currentUser] = users[currentUser] || {};
+      users[currentUser].plan = "Silver";
+      users[currentUser].paymentConfirmed = false; // start mining after delay
+      users[currentUser].balance = 0;
+      users[currentUser].totalMined = 0;
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("Payment confirmed! Redirecting to dashboard...");
+      window.location.href = "dashboard.html";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTC Mining Pro | Home</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Responsive adjustments for index */
+    @media (max-width: 768px) {
+      .hero {
+        padding: 60px 10px;
+      }
+      .hero h1 {
+        font-size: 2em;
+      }
+      .hero p {
+        font-size: 1em;
+      }
+      .features, .plan-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      .feature, .plan {
+        width: 90%;
+        margin-bottom: 20px;
+      }
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
+      .stats {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .testimonial {
+        margin: 15px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="plans.html">Plans</a>
+    <a href="withdraw.html">Withdraw</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Start Mining Bitcoin Today</h1>
+    <p>Secure. Fast. Reliable. Grow your wealth with our trusted mining platform.</p>
+    <a href="#" onclick="getStarted()">Get Started</a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="feature">⚡ Fast & Reliable Mining</div>
+    <div class="feature">🔒 Secure Blockchain Payments</div>
+    <div class="feature">🌍 Accessible Anywhere</div>
+    <div class="feature">🤝 24/7 Customer Support</div>
+  </section>
+
+  <!-- Plans Preview (Info Only) -->
+  <section class="plans-preview">
+    <h2>Choose Your Plan</h2>
+    <div class="plan-cards">
+      <div class="plan">
+        <h3>Starter Plan</h3>
+        <p>$200 | 0.006 BTC/day</p>
+      </div>
+      <div class="plan">
+        <h3>Silver Plan</h3>
+        <p>$500 | 0.018 BTC/day</p>
+      </div>
+      <div class="plan">
+        <h3>Gold Plan</h3>
+        <p>$1,000 | 0.04 BTC/day</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stat">👥 2,500+ Users</div>
+    <div class="stat">💰 $1,200,000+ Paid</div>
+    <div class="stat">⛏️ 3500 BTC Mined</div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <h2>What Our Clients Say</h2>
+    <div class="testimonial">⭐⭐⭐⭐⭐<br>“I started with the Starter Plan and I’m already seeing returns!” – John D.</div>
+    <div class="testimonial">⭐⭐⭐⭐<br>“Great support team and easy to use dashboard.” – Sarah K.</div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 BTC Mining Pro. All Rights Reserved.</p>
+    <p>
+      <a href="#">About Us</a> |
+      <a href="#">Terms</a> |
+      <a href="#">Privacy</a>
+    </p>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    // Get Started flow
+    function getStarted() {
+      if(localStorage.getItem("loggedIn") === "true") {
+        // Logged in → redirect to plans page
+        window.location.href = "plans.html";
+      } else {
+        // Not logged in → redirect to login page
+        window.location.href = "login.html";
+      }
+    }
+  </script>
+
+</body>
+</html>

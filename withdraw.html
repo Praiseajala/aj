@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw BTC - BTC Mining Pro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      margin: 15px;
+      text-align: center;
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      background: #fff;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 90%;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      background: #28a745;
+      color: #fff;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #218838;
+    }
+    .note {
+      margin-top: 20px;
+      color: #dc3545;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="plans.html">Plans</a>
+    <a href="withdraw.html" class="active">Withdraw</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <div class="container">
+    <h2>Withdraw BTC</h2>
+    <p>To withdraw your mining earnings, provide your BTC address below:</p>
+    
+    <input type="text" id="btcAddress" placeholder="Enter your BTC address">
+    <br>
+    <button onclick="withdraw()">Submit Withdrawal</button>
+
+    <div class="note" id="note"></div>
+  </div>
+
+  <script>
+    const btcPriceUSD = 30000;
+    const minUSD = 5000; // Minimum withdrawal
+
+    // Redirect if not logged in
+    if(localStorage.getItem("isLoggedIn") !== "true") {
+      alert("You must login/register first to withdraw.");
+      window.location.href = "register.html";
+    }
+
+    function withdraw() {
+      const btcAddress = document.getElementById("btcAddress").value.trim();
+      if(!btcAddress) {
+        alert("Please enter your BTC address.");
+        return;
+      }
+
+      const currentUser = localStorage.getItem("currentUser");
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+      let userData = users[currentUser] || { balance: 0 };
+
+      const balanceUSD = userData.balance * btcPriceUSD;
+      if(balanceUSD < minUSD) {
+        alert(`Your balance is $${balanceUSD.toFixed(2)}. Minimum withdrawal is $${minUSD}.`);
+        return;
+      }
+
+      // Save user's withdrawal request locally
+      users[currentUser].withdrawalAddress = btcAddress;
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // Show confirmation message and WhatsApp link
+      const note = document.getElementById("note");
+      note.innerHTML = `✅ Withdrawal request recorded! <br>
+                        Please contact our agent on WhatsApp to confirm your withdrawal:<br>
+                        <a href="https://wa.me/1234567890?text=Hello,%20I%20would%20like%20to%20withdraw%20my%20BTC%20(${userData.balance.toFixed(6)} BTC)%20to%20address:%20${btcAddress}" target="_blank">📲 Contact Agent</a>`;
+    }
+  </script>
+
+</body>
+</html>
