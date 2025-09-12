@@ -56,6 +56,41 @@
       color: #dc3545;
       font-weight: bold;
     }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .close-btn {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .close-btn:hover {
+      background: #c82333;
+    }
   </style>
 </head>
 <body>
@@ -79,20 +114,40 @@
     <div class="note" id="note"></div>
   </div>
 
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content" id="modalContent">
+      <p id="modalMessage"></p>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
   <script>
     const btcPriceUSD = 30000;
     const minUSD = 5000; // Minimum withdrawal
 
+    const modal = document.getElementById("modal");
+    const modalMessage = document.getElementById("modalMessage");
+
+    function showModal(message) {
+      modalMessage.textContent = message;
+      modal.style.display = "block";
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
     // Redirect if not logged in
     if(localStorage.getItem("isLoggedIn") !== "true") {
-      alert("You must login/register first to withdraw.");
-      window.location.href = "register.html";
+      showModal("You must login/register first to withdraw.");
+      setTimeout(() => window.location.href = "register.html", 2000); // redirect after 2 sec
     }
 
     function withdraw() {
       const btcAddress = document.getElementById("btcAddress").value.trim();
       if(!btcAddress) {
-        alert("Please enter your BTC address.");
+        showModal("Please enter your BTC address.");
         return;
       }
 
@@ -102,7 +157,7 @@
 
       const balanceUSD = userData.balance * btcPriceUSD;
       if(balanceUSD < minUSD) {
-        alert(`Your balance is $${balanceUSD.toFixed(2)}. Minimum withdrawal is $${minUSD}.`);
+        showModal(`Your balance is $${balanceUSD.toFixed(2)}. Minimum withdrawal is $${minUSD}.`);
         return;
       }
 
@@ -115,6 +170,13 @@
       note.innerHTML = `✅ Withdrawal request recorded! <br>
                         Please contact our agent on WhatsApp to confirm your withdrawal:<br>
                         <a href="https://wa.me/+2349025600630?text=Hello,%20I%20would%20like%20to%20withdraw%20my%20BTC%20(${userData.balance.toFixed(6)} BTC)%20to%20address:%20${btcAddress}" target="_blank">📲 Contact Agent</a>`;
+    }
+
+    // Close modal if user clicks outside of it
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
     }
   </script>
 

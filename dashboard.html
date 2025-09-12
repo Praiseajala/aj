@@ -21,30 +21,9 @@
   .card h3 { margin:10px 0; color:#fff; }
 
   /* Dashboard Values */
-  #planName {
-    color: #00ff99;
-    font-weight: bold;
-    font-size: 1.5em;
-    text-shadow: 1px 1px 5px rgba(0,255,150,0.7);
-    margin-top: 10px;
-    transition: transform 0.3s;
-  }
-
-  #miningRate {
-    color: #00d1ff;
-    font-weight: bold;
-    font-size: 1.3em;
-    text-shadow: 1px 1px 5px rgba(0,209,255,0.6);
-    margin-top: 10px;
-    transition: transform 0.3s;
-  }
-
-  .balance {
-    font-size:22px; color:#00ff99; margin-top:10px; font-weight:bold;
-    transition: transform 0.3s;
-  }
-
-  /* Animate number change */
+  #planName { color: #00ff99; font-weight: bold; font-size: 1.5em; text-shadow: 1px 1px 5px rgba(0,255,150,0.7); margin-top: 10px; transition: transform 0.3s; }
+  #miningRate { color: #00d1ff; font-weight: bold; font-size: 1.3em; text-shadow: 1px 1px 5px rgba(0,209,255,0.6); margin-top: 10px; transition: transform 0.3s; }
+  .balance { font-size:22px; color:#00ff99; margin-top:10px; font-weight:bold; transition: transform 0.3s; }
   .animate-update { transform: scale(1.2); }
 
   .status { font-size:16px; margin:10px 0; }
@@ -70,7 +49,6 @@
   .stat-number.usd { color:#00d1ff; font-weight:bold; font-size:1.2em; transition: transform 0.3s; }
   .stat-number.referrals { color:#ffc107; font-weight:bold; font-size:1.2em; transition: transform 0.3s; }
 
-  /* Mobile Responsive */
   @media (max-width:768px){
     .stats-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:15px; justify-items:center; }
     .stat-box:nth-child(3) { grid-column:1/-1; }
@@ -104,20 +82,17 @@
 
 <div class="container">
 
-  <!-- Plan Info -->
   <div class="card">
     <h3>Your Plan</h3>
     <div id="planName">No Plan Selected</div>
     <button id="buyPlanBtn" class="buy-btn" onclick="goToPlans()" style="display:none;">Buy a Plan</button>
   </div>
 
-  <!-- Payment Status -->
   <div class="card">
     <h3>Payment Status</h3>
     <div id="paymentStatus" class="status pending"></div>
   </div>
 
-  <!-- Mining Info -->
   <div class="card">
     <h3>Mining Rate</h3>
     <div id="miningRate">0 BTC/day</div>
@@ -131,7 +106,6 @@
     </div>
   </div>
 
-  <!-- Earnings & Referral Stats -->
   <div class="card stats-grid">
     <div class="stat-box">
       <h4>💰 Total BTC Mined</h4>
@@ -147,14 +121,12 @@
     </div>
   </div>
 
-  <!-- Logout -->
   <div class="card">
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
 </div>
 
-<!-- Notification Modal -->
 <div id="notificationModal" class="modal">
   <div class="modal-content">
     <p id="notificationMessage"></p>
@@ -171,7 +143,7 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-window.addEventListener('resize', () => {
+window.addEventListener('resize', ()=>{
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
@@ -187,6 +159,7 @@ for(let i=0;i<particleCount;i++){
     dy: (Math.random()-0.5)*0.5
   });
 }
+
 function animateParticles(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   for(let p of particles){
@@ -196,8 +169,8 @@ function animateParticles(){
     ctx.fill();
     p.x += p.dx;
     p.y += p.dy;
-    if(p.x < 0 || p.x > canvas.width) p.dx*=-1;
-    if(p.y < 0 || p.y > canvas.height) p.dy*=-1;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
   }
   requestAnimationFrame(animateParticles);
 }
@@ -209,7 +182,7 @@ animateParticles();
 const btcPriceUSD = 30000;
 const planRates = { "Starter":0.006, "Silver":0.018, "Gold":0.04 };
 const currentUser = localStorage.getItem("currentUser");
-let users = JSON.parse(localStorage.getItem("users")) || {};
+let users = JSON.parse(localStorage.getItem("users"))||{};
 let userData = users[currentUser] || { plan:"", paymentConfirmed:false, balance:0, totalMined:0, referrals:0 };
 
 const planName = document.getElementById("planName");
@@ -221,7 +194,9 @@ const totalMinedEl = document.getElementById("totalMined");
 const estimatedEarningsEl = document.getElementById("estimatedEarnings");
 const referralsEl = document.getElementById("referrals");
 const buyPlanBtn = document.getElementById("buyPlanBtn");
+
 let lastMiningTime = parseInt(localStorage.getItem(currentUser+"_lastMine"))||Date.now();
+let lastReset = parseInt(localStorage.getItem(currentUser+"_lastReset"))||Date.now();
 
 const notificationModal = document.getElementById("notificationModal");
 const notificationMessage = document.getElementById("notificationMessage");
@@ -229,7 +204,6 @@ const closeNotificationBtn = document.getElementById("closeNotificationBtn");
 closeNotificationBtn.onclick = ()=>{ notificationModal.style.display="none"; }
 window.onclick = e=>{ if(e.target==notificationModal) notificationModal.style.display="none"; }
 
-/* Animate Value Change */
 function animateValue(element,newValue){
   element.classList.add('animate-update');
   element.innerText = newValue;
@@ -237,25 +211,35 @@ function animateValue(element,newValue){
 }
 
 function updateProgressBar(){
-  const plan=userData.plan;
-  if(!plan){ progressBar.style.width="0%"; progressBar.innerText="0%"; return;}
-  const percent=Math.min((userData.balance/planRates[plan])*100,100);
-  progressBar.style.width=percent+"%";
-  progressBar.innerText=percent.toFixed(1)+"%";
+  const plan = userData.plan;
+  if(!plan){
+    progressBar.style.width = "0%";
+    progressBar.innerText = "0%";
+    return;
+  }
+  const now = Date.now();
+  const secondsSinceReset = (now-lastReset)/1000;
+  const dailyLimit = planRates[plan];
+  let balanceProgress = Math.min(userData.balance,dailyLimit);
+  const progressPercent = Math.min((balanceProgress/dailyLimit)*100,100);
+  progressBar.style.width = progressPercent + "%";
+  progressBar.innerText = progressPercent.toFixed(1) + "%";
 }
 
 function startMining(){
-  if(userData.plan&&!userData.paymentConfirmed){
-    paymentStatus.innerHTML="⏳ Starting Mining...";
+  if(userData.plan && !userData.paymentConfirmed){
+    paymentStatus.innerHTML = "⏳ Starting Mining...";
     paymentStatus.classList.remove("confirmed");
     paymentStatus.classList.add("pending");
     setTimeout(()=>{
-      userData.paymentConfirmed=true;
-      users[currentUser]=userData;
+      userData.paymentConfirmed = true;
+      users[currentUser] = userData;
       localStorage.setItem("users",JSON.stringify(users));
-      paymentStatus.innerHTML="✅ Mining Started!";
+      paymentStatus.innerHTML = "✅ Mining Started!";
       paymentStatus.classList.remove("pending");
       paymentStatus.classList.add("confirmed");
+      lastReset = Date.now();
+      localStorage.setItem(currentUser+"_lastReset",lastReset);
       notificationMessage.innerText="Mining has started!";
       notificationModal.style.display="block";
     },5000);
@@ -263,7 +247,7 @@ function startMining(){
 }
 
 function updateDashboard(){
-  const plan=userData.plan;
+  const plan = userData.plan;
   animateValue(planName, plan||"No Plan Bought");
   buyPlanBtn.style.display = plan ? "none" : "inline-block";
   animateValue(miningRate, plan ? planRates[plan]+" BTC/day" : "0 BTC/day");
@@ -283,7 +267,7 @@ function updateDashboard(){
   animateValue(totalMinedEl, parseFloat(userData.totalMined).toFixed(6)+" BTC");
   animateValue(estimatedEarningsEl, "$"+(parseFloat(userData.totalMined)*btcPriceUSD).toFixed(2));
   animateValue(referralsEl, userData.referrals+" Referrals");
-  
+
   updateProgressBar();
 }
 
@@ -294,12 +278,19 @@ updateDashboard();
 
 setInterval(()=>{
   if(userData.plan && userData.paymentConfirmed){
-    const now=Date.now();
-    const secondsPassed=(now-lastMiningTime)/1000;
-    const increment=planRates[userData.plan]/86400*secondsPassed;
-    userData.balance+=increment;
-    userData.totalMined+=increment;
-    users[currentUser]=userData;
+    const now = Date.now();
+    const secondsPassed = (now - lastMiningTime)/1000;
+    const increment = planRates[userData.plan]/86400*secondsPassed;
+    userData.balance += increment;
+    userData.totalMined += increment;
+
+    if(now - lastReset >= 86400*1000){
+      userData.balance = 0;
+      lastReset = now;
+      localStorage.setItem(currentUser+"_lastReset", lastReset);
+    }
+
+    users[currentUser] = userData;
     localStorage.setItem("users",JSON.stringify(users));
     localStorage.setItem(currentUser+"_lastMine",now);
 
@@ -307,9 +298,11 @@ setInterval(()=>{
     animateValue(totalMinedEl, userData.totalMined.toFixed(6)+" BTC");
     animateValue(estimatedEarningsEl, "$"+(userData.totalMined*btcPriceUSD).toFixed(2));
     updateProgressBar();
+
     lastMiningTime = now;
   }
 },1000);
+
 </script>
 
 </body>
